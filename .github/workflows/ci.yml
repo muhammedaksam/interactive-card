@@ -82,3 +82,29 @@ jobs:
           pnpm exec concurrently -k -s first -n "SB,TEST" -c "magenta,blue" \
             "pnpm exec http-server storybook-static --port 6006 --silent" \
             "pnpm exec wait-on http://127.0.0.1:6006 && pnpm test:storybook"
+
+  publish-check:
+    name: Publish Check
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check if package can be published
+        run: pnpm run prepublishOnly
