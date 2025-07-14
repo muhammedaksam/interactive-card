@@ -1,20 +1,19 @@
 {
-  "message": "hello i18n !!",
   "card": {
     "cardHolder": "Kart Sahibi",
     "fullName": "Ad Soyad",
-    "expires": "Son Kullanma",
+    "expires": "Geçerlilik",
     "MM": "AA",
     "YY": "YY"
   },
   "cardForm": {
     "cardNumber": "Kart Numarası",
-    "cardName": "Kart Üzerindeki İsim",
+    "cardName": "Kart Adı",
     "expirationDate": "Son Kullanma Tarihi",
     "month": "Ay",
     "year": "Yıl",
     "CVV": "CVV",
-    "submit": "Öde",
+    "submit": "Gönder",
     "invalidCardNumber": "Geçersiz Kart Numarası"
   }
 }

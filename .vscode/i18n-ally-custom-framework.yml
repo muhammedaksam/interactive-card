@@ -1,0 +1,26 @@
+# Custom framework configuration for i18n-ally to detect translation patterns
+# This file enables i18n-ally to recognize translation keys used in our React components
+
+# Language IDs that this framework applies to
+languageIds:
+  - typescript
+  - typescriptreact
+  - javascript
+  - javascriptreact
+
+# Regular expressions to match translation key usage patterns
+usageMatchRegex:
+  # Matches translate("card.cardHolder") function calls
+  - "translate\\s*\\(\\s*['\"`]([^$'\"`]+)['\"`]"
+  # Matches t("card.cardHolder") function calls
+  - "\\bt\\s*\\(\\s*['\"`]([^$'\"`]+)['\"`]"
+
+# Set to false to allow other frameworks to work alongside this custom framework
+monopoly: false
+
+# File extensions that should be processed
+fileExtensions:
+  - .ts
+  - .tsx
+  - .js
+  - .jsx

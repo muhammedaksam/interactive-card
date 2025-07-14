@@ -1,20 +1,38 @@
-@import url("https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600,700|Source+Sans+Pro:400,600,700&display=swap");
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600,700|Source+Sans+Pro:400,600,700&display=swap');
 
-body {
-  background: #ddeefc;
-  font-family: "Source Sans Pro", sans-serif;
-  font-size: 16px;
-}
-* {
-  box-sizing: border-box;
-  &:focus {
-    outline: none;
+// Export as CSS Module to avoid global styles when using as a library
+:global {
+  body {
+    background: #ddeefc;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+  }
+
+  * {
+    box-sizing: border-box;
+    &:focus {
+      outline: none;
+    }
   }
 }
+
 .wrapper {
   min-height: 100vh;
   display: flex;
   padding: 50px 15px;
+  background: #ddeefc;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+
+  * {
+    box-sizing: border-box;
+    &:focus {
+      outline: none;
+    }
+  }
+
   @media screen and (max-width: 700px), (max-height: 500px) {
     flex-wrap: wrap;
     flex-direction: column;
@@ -25,6 +43,7 @@ body {
   max-width: 570px;
   margin: auto;
   width: 100%;
+  position: relative;
 
   @media screen and (max-width: 576px) {
     margin: 0 auto;
@@ -32,11 +51,11 @@ body {
 
   &__inner {
     background: #fff;
-    // box-shadow: 3px 13px 30px 0px rgba(21, 34, 67, 0.2);
     box-shadow: 0 30px 60px 0 rgba(90, 116, 148, 0.4);
     border-radius: 10px;
     padding: 35px;
     padding-top: 180px;
+    position: relative;
 
     @media screen and (max-width: 480px) {
       padding: 25px;
@@ -106,7 +125,7 @@ body {
     border-radius: 5px;
     font-size: 22px;
     font-weight: 500;
-    font-family: "Source Sans Pro", sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     box-shadow: 3px 10px 20px 0px rgba(35, 100, 210, 0.3);
     color: #fff;
     margin-top: 20px;
@@ -152,7 +171,7 @@ body {
 
   &__focus {
     position: absolute;
-    z-index: 3;
+    z-index: 10;
     border-radius: 5px;
     left: 0;
     top: 0;
@@ -162,19 +181,20 @@ body {
     opacity: 0;
     pointer-events: none;
     overflow: hidden;
-    border: 2px solid rgba(255, 255, 255, 0.65);
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 
     &:after {
-      content: "";
+      content: '';
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      background: rgb(8, 20, 47);
+      background: rgba(8, 20, 47, 0.1);
       height: 100%;
       border-radius: 5px;
-      filter: blur(25px);
-      opacity: 0.5;
+      filter: blur(15px);
+      opacity: 0.3;
     }
 
     &.-active {
@@ -211,7 +231,7 @@ body {
       height: 100%;
 
       .card-item__cover {
-        transform: rotateY(-180deg)
+        transform: rotateY(-180deg);
       }
     }
   }
@@ -235,7 +255,7 @@ body {
     border-radius: 15px;
     overflow: hidden;
     &:after {
-      content: "";
+      content: '';
       position: absolute;
       left: 0;
       top: 0;
@@ -321,7 +341,7 @@ body {
   }
 
   &__wrapper {
-    font-family: "Source Code Pro", monospace;
+    font-family: 'Source Code Pro', monospace;
     padding: 25px 15px;
     position: relative;
     z-index: 4;
@@ -410,13 +430,16 @@ body {
     margin-left: auto;
     padding: 10px;
     display: inline-flex;
-    width: 80px;
-    white-space: nowrap;
+    min-width: 80px;
+    max-width: 120px;
+    white-space: normal;
     flex-shrink: 0;
     cursor: pointer;
 
     @media screen and (max-width: 480px) {
       font-size: 16px;
+      min-width: 70px;
+      max-width: 100px;
     }
   }
 
@@ -433,6 +456,8 @@ body {
     font-size: 13px;
     padding-bottom: 6px;
     width: 100%;
+    line-height: 1.2;
+    text-align: center;
 
     @media screen and (max-width: 480px) {
       font-size: 12px;
@@ -502,6 +527,8 @@ body {
 
 .card-list {
   margin-bottom: -130px;
+  position: relative;
+  z-index: 10;
 
   @media screen and (max-width: 480px) {
     margin-bottom: -120px;
@@ -531,7 +558,7 @@ body {
     padding: 5px 15px;
     background: none;
     color: #1a3b5d;
-    font-family: "Source Sans Pro", sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
 
     &:hover,
     &:focus {
@@ -543,6 +570,7 @@ body {
     }
     &.-select {
       -webkit-appearance: none;
+      appearance: none;
       background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAeCAYAAABuUU38AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAUxJREFUeNrM1sEJwkAQBdCsngXPHsQO9O5FS7AAMVYgdqAd2IGCDWgFnryLFQiCZ8EGnJUNimiyM/tnk4HNEAg/8y6ZmMRVqz9eUJvRaSbvutCZ347bXVJy/ZnvTmdJ862Me+hAbZCTs6GHpyUi1tTSvPnqTpoWZPUa7W7ncT3vK4h4zVejy8QzM3WhVUO8ykI6jOxoGA4ig3BLHcNFSCGqGAkig2yqgpEiMsjSfY9LxYQg7L6r0X6wS29YJiYQYecemY+wHrXD1+bklGhpAhBDeu/JfIVGxaAQ9sb8CI+CQSJ+QmJg0Ii/EE2MBiIXooHRQhRCkBhNhBcEhLkwf05ZCG8ICCOpk0MULmvDSY2M8UawIRExLIQIEgHDRoghihgRIgiigBEjgiFATBACAgFgghEwSAAGgoBCBBgYAg5hYKAIFYgHBo6w9RRgAFfy160QuV8NAAAAAElFTkSuQmCC');
       background-size: 12px;
       background-position: 90% center;
@@ -559,7 +587,7 @@ body {
     border-radius: 50%;
     top: 35px;
     right: 10px;
-    opacity: .75;
+    opacity: 0.75;
     color: #8c9cae;
     cursor: pointer;
     padding: 0;
@@ -567,7 +595,7 @@ body {
     display: inline-flex;
     border: 2px solid currentColor;
     box-shadow: none;
-    transition: all .3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 
     &:before {
       content: '';
@@ -579,10 +607,10 @@ body {
       left: 6px;
       z-index: 2;
       border-radius: 50%;
-      transform: scale(.1);
+      transform: scale(0.1);
       opacity: 0;
-      transition: all .3s ease-in-out;
-      transition-delay: .1s;
+      transition: all 0.3s ease-in-out;
+      transition-delay: 0.1s;
     }
 
     &:after {
@@ -594,18 +622,20 @@ body {
       width: 0.6em;
       height: 0.6em;
       border-radius: 50%;
-      transform: scale(.1);
+      transform: scale(0.1);
       opacity: 0;
-      transition: all .3s ease-in-out;
+      transition: all 0.3s ease-in-out;
     }
 
-    &:hover:not(:disabled), &.-active:not(:disabled) {
+    &:hover:not(:disabled),
+    &.-active:not(:disabled) {
       color: #2364d2;
       opacity: 1;
     }
 
     &.-active {
-      &::before, &::after {
+      &::before,
+      &::after {
         transform: scale(1);
         opacity: 1;
       }
@@ -613,7 +643,7 @@ body {
 
     &:disabled {
       cursor: not-allowed;
-      opacity: .4;
+      opacity: 0.4;
     }
   }
 }
@@ -658,8 +688,6 @@ body {
   pointer-events: none;
 }
 
-
-
 .github-btn {
   position: absolute;
   right: 40px;
@@ -674,7 +702,7 @@ body {
   letter-spacing: 1px;
   font-size: 16px;
   text-align: center;
-  transition: all .3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 
   @media screen and (min-width: 500px) {
     &:hover {
