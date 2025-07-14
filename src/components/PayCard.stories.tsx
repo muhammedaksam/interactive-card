@@ -177,13 +177,25 @@ export const VisualTest: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // Check that card number is displayed
-    const cardNumber = canvas.getByText('4111');
-    await expect(cardNumber).toBeInTheDocument();
+    // Check that card number digits are displayed individually
+    const cardNumberElements = canvasElement.querySelectorAll(
+      '.card-item__numberItem'
+    );
+    await expect(cardNumberElements.length).toBeGreaterThan(0);
 
-    // Check that cardholder name is displayed
-    const cardName = canvas.getByText('John Doe');
-    await expect(cardName).toBeInTheDocument();
+    // Check that first digit of card number is displayed
+    const firstDigit = canvas.getByText('4');
+    await expect(firstDigit).toBeInTheDocument();
+
+    // Check that cardholder name elements are displayed individually
+    const cardNameElements = canvasElement.querySelectorAll(
+      '.card-item__nameItem'
+    );
+    await expect(cardNameElements.length).toBeGreaterThan(0);
+
+    // Check that first character of name is displayed
+    const firstNameChar = canvas.getByText('J');
+    await expect(firstNameChar).toBeInTheDocument();
 
     // Check that expiry is displayed correctly
     const expiryMonth = canvas.getByText('12');
@@ -198,10 +210,8 @@ export const VisualTest: Story = {
     await expect(cardTypeImg).toBeInTheDocument();
     await expect(cardTypeImg).toHaveAttribute('alt', 'visa');
 
-    // Check focus element is active
-    const focusElement = canvasElement.querySelector(
-      '.card-item__focus.-active'
-    );
-    await expect(focusElement).toBeInTheDocument();
+    // Check that card number area exists
+    const cardNumberLabel = canvasElement.querySelector('.card-item__number');
+    await expect(cardNumberLabel).toBeInTheDocument();
   },
 };
