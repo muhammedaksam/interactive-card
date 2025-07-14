@@ -7,14 +7,19 @@
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist",
-    "README.md",
-    "dist/style.css"
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "dist/**/*.d.ts.map",
+    "dist/style.css",
+    "!dist/**/*.stories.*",
+    "!dist/**/*.test.*",
+    "!dist/**/*.spec.*",
+    "README.md"
   ],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "build:lib": "tsc && vite build --mode lib",
+    "build:lib": "tsc --project tsconfig.build.json && vite build --mode lib",
     "preview": "vite preview",
     "test": "vitest",
     "test:run": "vitest run",
