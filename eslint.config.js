@@ -68,6 +68,45 @@ export default [
       },
     },
   },
+  // Node.js scripts configuration
+  {
+    files: ['scripts/**/*.{ts,js}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: {
+        ...globals.node,
+        __dirname: 'readonly',
+        process: 'readonly',
+      },
+      parser: parser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+      },
+    },
+    plugins: {
+      '@typescript-eslint': tseslint,
+    },
+    rules: {
+      // TypeScript specific rules
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_|^data$',
+          args: 'after-used',
+        },
+      ],
+      '@typescript-eslint/no-explicit-any': 'warn',
+
+      // General rules
+      'prefer-const': 'error',
+      'no-var': 'error',
+      'no-console': 'off', // Allow console in scripts
+      'no-unused-vars': 'off', // Use TypeScript version instead
+      semi: ['error', 'always'],
+    },
+  },
   {
     ignores: ['dist', 'node_modules', 'storybook-static', '.eslintrc.cjs'],
   },
