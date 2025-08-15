@@ -80,6 +80,54 @@ describe('translations', () => {
       expect(t('missingKey')).toBe('missingKey');
       expect(t('missingKey', 'pt')).toBe('missingKey');
     });
+
+    it('handles parameter replacement in translations', () => {
+      // We need to test the parameter replacement functionality
+      // Since there are no existing translations with parameters, we'll create a mock scenario
+      // by testing the translate function directly with parameters
+
+      // Mock a translation that would have parameters
+      const originalTranslations = translations.en;
+      const mockTranslations = {
+        ...originalTranslations,
+        test: {
+          withParams: 'Hello {name}, you have {count} messages',
+        },
+      };
+
+      // Temporarily replace the translations
+      Object.assign(translations, { en: mockTranslations });
+
+      // Test parameter replacement
+      expect(
+        translate('test.withParams', { name: 'John', count: 5 }, 'en')
+      ).toBe('Hello John, you have 5 messages');
+
+      // Test multiple instances of same parameter
+      const mockTranslationsMultiple = {
+        ...originalTranslations,
+        test: {
+          withParams: 'Hello {name}! Welcome {name}!',
+        },
+      };
+      Object.assign(translations, { en: mockTranslationsMultiple });
+      expect(translate('test.withParams', { name: 'Jane' }, 'en')).toBe(
+        'Hello Jane! Welcome Jane!'
+      );
+
+      // Test with no parameters provided
+      expect(translate('test.withParams', {}, 'en')).toBe(
+        'Hello {name}! Welcome {name}!'
+      );
+
+      // Test with extra parameters
+      expect(
+        translate('test.withParams', { name: 'Bob', extra: 'value' }, 'en')
+      ).toBe('Hello Bob! Welcome Bob!');
+
+      // Restore original translations
+      Object.assign(translations, { en: originalTranslations });
+    });
   });
 
   describe('translations object', () => {

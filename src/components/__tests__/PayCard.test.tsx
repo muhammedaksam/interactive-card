@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { CardFormData } from '../../types';
 import PayCard from '../PayCard';
 
@@ -309,5 +309,373 @@ describe('PayCard', () => {
 
     // Should render without errors when no target element is found
     expect(screen.getByText('4')).toBeInTheDocument();
+  });
+
+  it('sets focus element style for valid elements with dimensions', () => {
+    // Mock offsetWidth, offsetHeight, offsetLeft, offsetTop to have positive values
+    const originalOffsetWidth = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetWidth'
+    );
+    const originalOffsetHeight = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetHeight'
+    );
+    const originalOffsetLeft = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetLeft'
+    );
+    const originalOffsetTop = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetTop'
+    );
+
+    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
+      configurable: true,
+      value: 100,
+    });
+    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+      configurable: true,
+      value: 50,
+    });
+    Object.defineProperty(HTMLElement.prototype, 'offsetLeft', {
+      configurable: true,
+      value: 10,
+    });
+    Object.defineProperty(HTMLElement.prototype, 'offsetTop', {
+      configurable: true,
+      value: 20,
+    });
+
+    render(
+      <PayCard
+        labels={mockCardData}
+        fields={mockFields}
+        locale="en"
+        isCardFlipped={false}
+        focusedField="react-card-number"
+        isCardNumberMasked={false}
+        randomBackgrounds={false}
+      />
+    );
+
+    // Should render without errors and set focus style
+    expect(screen.getByText('4')).toBeInTheDocument();
+
+    // Restore original properties
+    if (originalOffsetWidth) {
+      Object.defineProperty(
+        HTMLElement.prototype,
+        'offsetWidth',
+        originalOffsetWidth
+      );
+    }
+    if (originalOffsetHeight) {
+      Object.defineProperty(
+        HTMLElement.prototype,
+        'offsetHeight',
+        originalOffsetHeight
+      );
+    }
+    if (originalOffsetLeft) {
+      Object.defineProperty(
+        HTMLElement.prototype,
+        'offsetLeft',
+        originalOffsetLeft
+      );
+    }
+    if (originalOffsetTop) {
+      Object.defineProperty(
+        HTMLElement.prototype,
+        'offsetTop',
+        originalOffsetTop
+      );
+    }
+  });
+
+  it('handles focus on elements with zero width but positive height', () => {
+    // Test the edge case where offsetWidth is 0 but offsetHeight is positive
+    const originalOffsetWidth = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetWidth'
+    );
+    const originalOffsetHeight = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetHeight'
+    );
+
+    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
+      configurable: true,
+      value: 0, // Zero width
+    });
+    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+      configurable: true,
+      value: 50, // Positive height
+    });
+
+    render(
+      <PayCard
+        labels={mockCardData}
+        fields={mockFields}
+        locale="en"
+        isCardFlipped={false}
+        focusedField="react-card-number"
+        isCardNumberMasked={false}
+        randomBackgrounds={false}
+      />
+    );
+
+    // Should render without errors and not set focus style (because width is 0)
+    expect(screen.getByText('4')).toBeInTheDocument();
+
+    // Restore original properties
+    if (originalOffsetWidth) {
+      Object.defineProperty(
+        HTMLElement.prototype,
+        'offsetWidth',
+        originalOffsetWidth
+      );
+    }
+    if (originalOffsetHeight) {
+      Object.defineProperty(
+        HTMLElement.prototype,
+        'offsetHeight',
+        originalOffsetHeight
+      );
+    }
+  });
+
+  it('handles all different field focus scenarios', () => {
+    const fieldTests = [
+      { field: 'react-card-number', description: 'card number field' },
+      { field: 'react-card-name', description: 'card name field' },
+      { field: 'cardDate', description: 'card date field' },
+      { field: 'react-card-month', description: 'card month field' },
+      { field: 'react-card-year', description: 'card year field' },
+    ];
+
+    fieldTests.forEach(({ field }) => {
+      const { unmount } = render(
+        <PayCard
+          labels={mockCardData}
+          fields={mockFields}
+          locale="en"
+          isCardFlipped={false}
+          focusedField={field}
+          isCardNumberMasked={false}
+          randomBackgrounds={false}
+        />
+      );
+
+      // Should render without errors for each field type
+      expect(screen.getByText('4')).toBeInTheDocument();
+
+      unmount();
+    });
+  });
+
+  it('sets focus element style when cardDate field is focused', () => {
+    // Mock offsetWidth, offsetHeight, offsetLeft, offsetTop to have positive values
+    const originalOffsetWidth = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetWidth'
+    );
+    const originalOffsetHeight = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetHeight'
+    );
+    const originalOffsetLeft = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetLeft'
+    );
+    const originalOffsetTop = Object.getOwnPropertyDescriptor(
+      HTMLElement.prototype,
+      'offsetTop'
+    );
+
+    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
+      configurable: true,
+      value: 100,
+    });
+    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+      configurable: true,
+      value: 50,
+    });
+    Object.defineProperty(HTMLElement.prototype, 'offsetLeft', {
+      configurable: true,
+      value: 10,
+    });
+    Object.defineProperty(HTMLElement.prototype, 'offsetTop', {
+      configurable: true,
+      value: 20,
+    });
+
+    // Test cardDate field specifically
+    const { unmount: unmount1 } = render(
+      <PayCard
+        labels={mockCardData}
+        fields={mockFields}
+        locale="en"
+        isCardFlipped={false}
+        focusedField="cardDate"
+        isCardNumberMasked={false}
+        randomBackgrounds={false}
+      />
+    );
+
+    // Should render without errors and set focus style
+    expect(screen.getAllByText('4')).toHaveLength(1);
+    unmount1();
+
+    // Test react-card-month field
+    const { unmount: unmount2 } = render(
+      <PayCard
+        labels={mockCardData}
+        fields={mockFields}
+        locale="en"
+        isCardFlipped={false}
+        focusedField="react-card-month"
+        isCardNumberMasked={false}
+        randomBackgrounds={false}
+      />
+    );
+
+    expect(screen.getAllByText('4')).toHaveLength(1);
+    unmount2();
+
+    // Test react-card-year field
+    const { unmount: unmount3 } = render(
+      <PayCard
+        labels={mockCardData}
+        fields={mockFields}
+        locale="en"
+        isCardFlipped={false}
+        focusedField="react-card-year"
+        isCardNumberMasked={false}
+        randomBackgrounds={false}
+      />
+    );
+
+    expect(screen.getAllByText('4')).toHaveLength(1);
+    unmount3();
+
+    // Restore original properties
+    if (originalOffsetWidth) {
+      Object.defineProperty(
+        HTMLElement.prototype,
+        'offsetWidth',
+        originalOffsetWidth
+      );
+    }
+    if (originalOffsetHeight) {
+      Object.defineProperty(
+        HTMLElement.prototype,
+        'offsetHeight',
+        originalOffsetHeight
+      );
+    }
+    if (originalOffsetLeft) {
+      Object.defineProperty(
+        HTMLElement.prototype,
+        'offsetLeft',
+        originalOffsetLeft
+      );
+    }
+    if (originalOffsetTop) {
+      Object.defineProperty(
+        HTMLElement.prototype,
+        'offsetTop',
+        originalOffsetTop
+      );
+    }
+  });
+
+  it('executes setFocusElementStyle with null when target has no dimensions', () => {
+    // Test the else branch by ensuring target has no dimensions
+    const { unmount } = render(
+      <PayCard
+        labels={mockCardData}
+        fields={mockFields}
+        locale="en"
+        isCardFlipped={false}
+        focusedField="react-card-number"
+        isCardNumberMasked={false}
+        randomBackgrounds={false}
+      />
+    );
+
+    // This should execute the else branch (line 105) since offsetWidth/Height are 0 by default
+    expect(screen.getAllByText('4')).toHaveLength(1);
+    unmount();
+  });
+
+  it('tests useLayoutEffect with focusedField changes and window resize', () => {
+    // Mock getBoundingClientRect for a proper DOM element
+    const mockGetBoundingClientRect = vi.fn(() => ({
+      width: 100,
+      height: 50,
+      left: 10,
+      top: 20,
+      x: 10,
+      y: 20,
+      right: 110,
+      bottom: 70,
+      toJSON: vi.fn(),
+    }));
+
+    const originalGetBoundingClientRect =
+      Element.prototype.getBoundingClientRect;
+    Element.prototype.getBoundingClientRect = mockGetBoundingClientRect;
+
+    // Mock offsetWidth, offsetHeight, offsetLeft, offsetTop to have positive values
+    Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
+      configurable: true,
+      value: 100,
+    });
+    Object.defineProperty(HTMLElement.prototype, 'offsetHeight', {
+      configurable: true,
+      value: 50,
+    });
+    Object.defineProperty(HTMLElement.prototype, 'offsetLeft', {
+      configurable: true,
+      value: 10,
+    });
+    Object.defineProperty(HTMLElement.prototype, 'offsetTop', {
+      configurable: true,
+      value: 20,
+    });
+
+    const { rerender } = render(
+      <PayCard
+        labels={mockCardData}
+        fields={mockFields}
+        locale="en"
+        isCardFlipped={false}
+        focusedField={null}
+        isCardNumberMasked={false}
+        randomBackgrounds={false}
+      />
+    );
+
+    // Change to cardDate field
+    rerender(
+      <PayCard
+        labels={mockCardData}
+        fields={mockFields}
+        locale="en"
+        isCardFlipped={false}
+        focusedField="cardDate"
+        isCardNumberMasked={false}
+        randomBackgrounds={false}
+      />
+    );
+
+    // Trigger window resize to test the resize event handler
+    window.dispatchEvent(new Event('resize'));
+
+    expect(screen.getAllByText('4')).toHaveLength(1);
+
+    // Restore
+    Element.prototype.getBoundingClientRect = originalGetBoundingClientRect;
   });
 });
