@@ -1,13 +1,9 @@
 // Example usage of the @muhammedaksam/interactive-card npm package
 
-import {
-  CardFormData,
-  InteractivePayCard,
-  PayCard,
-} from '@muhammedaksam/interactive-card';
 import React from 'react';
+import { CardFormData, InteractivePayCard, PayCard } from './src/index';
 // Don't forget to import the styles
-import '@muhammedaksam/interactive-card/dist/style.css';
+import './src/assets/style.scss';
 
 // Example 1: Full interactive card with form
 export const ExampleWithForm: React.FC = () => {

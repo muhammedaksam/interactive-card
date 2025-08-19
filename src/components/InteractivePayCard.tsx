@@ -6,14 +6,25 @@ import { translate } from '../utils/translations';
 import PayCard from './PayCard';
 
 const InteractivePayCard: React.FC<InteractivePayCardProps> = ({
+  // Controlled mode props
+  value,
+  onChange,
+
+  // Uncontrolled mode props (backward compatibility)
   initialData = {},
+
+  // Common props
   backgroundImage,
   randomBackgrounds = true,
   onSubmit,
   locale = 'en',
   className = '',
 }) => {
-  const [formData, setFormData] = useState<CardFormData>({
+  // Determine if component is controlled
+  const isControlled = value !== undefined && onChange !== undefined;
+
+  // Internal state for uncontrolled mode
+  const [internalFormData, setInternalFormData] = useState<CardFormData>({
     cardName: '',
     cardNumber: '',
     cardMonth: '',
@@ -21,6 +32,20 @@ const InteractivePayCard: React.FC<InteractivePayCardProps> = ({
     cardCvv: '',
     ...initialData,
   });
+
+  // Use controlled value or internal state
+  const formData = isControlled ? value : internalFormData;
+
+  // State update function that works for both modes
+  // eslint-disable-next-line no-unused-vars
+  const updateFormData = (updater: (prev: CardFormData) => CardFormData) => {
+    if (isControlled && onChange) {
+      const newData = updater(formData);
+      onChange(newData);
+    } else {
+      setInternalFormData(updater);
+    }
+  };
 
   const [isCardNumberMasked, setIsCardNumberMasked] = useState(true);
   const [focusedField, setFocusedField] = useState<string | null>(null);
@@ -75,7 +100,7 @@ const InteractivePayCard: React.FC<InteractivePayCardProps> = ({
   };
 
   const unMaskCardNumber = (): void => {
-    setFormData(prev => ({ ...prev, cardNumber: mainCardNumber }));
+    updateFormData(prev => ({ ...prev, cardNumber: mainCardNumber }));
   };
 
   // Event handlers
@@ -83,14 +108,14 @@ const InteractivePayCard: React.FC<InteractivePayCardProps> = ({
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
     const value = e.target.value;
-    setFormData(prev => ({ ...prev, cardName: value }));
+    updateFormData(prev => ({ ...prev, cardName: value }));
   };
 
   const handleCardNumberChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
     const { formatted, maxLength } = formatCardNumber(e.target.value);
-    setFormData(prev => ({ ...prev, cardNumber: formatted }));
+    updateFormData(prev => ({ ...prev, cardNumber: formatted }));
     setCardNumberMaxLength(maxLength);
     setMainCardNumber(formatted);
   };
@@ -98,20 +123,20 @@ const InteractivePayCard: React.FC<InteractivePayCardProps> = ({
   const handleCardMonthChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ): void => {
-    setFormData(prev => ({ ...prev, cardMonth: e.target.value }));
+    updateFormData(prev => ({ ...prev, cardMonth: e.target.value }));
   };
 
   const handleCardYearChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ): void => {
-    setFormData(prev => ({ ...prev, cardYear: e.target.value }));
+    updateFormData(prev => ({ ...prev, cardYear: e.target.value }));
   };
 
   const handleCardCvvChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ): void => {
     const value = handleNumberOnly(e.target.value);
-    setFormData(prev => ({ ...prev, cardCvv: value }));
+    updateFormData(prev => ({ ...prev, cardCvv: value }));
   };
 
   // Focus handlers
@@ -154,7 +179,7 @@ const InteractivePayCard: React.FC<InteractivePayCardProps> = ({
     }, 100);
 
     if (fieldName === fields.cardNumber && isCardNumberMasked) {
-      setFormData(prev => ({
+      updateFormData(prev => ({
         ...prev,
         cardNumber: maskCardNumber(mainCardNumber),
       }));
@@ -168,7 +193,7 @@ const InteractivePayCard: React.FC<InteractivePayCardProps> = ({
   const toggleMask = (): void => {
     setIsCardNumberMasked(!isCardNumberMasked);
     if (!isCardNumberMasked) {
-      setFormData(prev => ({
+      updateFormData(prev => ({
         ...prev,
         cardNumber: maskCardNumber(mainCardNumber),
       }));
@@ -200,7 +225,7 @@ const InteractivePayCard: React.FC<InteractivePayCardProps> = ({
   useEffect(() => {
     if (formData.cardNumber && isCardNumberMasked) {
       setMainCardNumber(formData.cardNumber);
-      setFormData(prev => ({
+      updateFormData(prev => ({
         ...prev,
         cardNumber: maskCardNumber(formData.cardNumber),
       }));
