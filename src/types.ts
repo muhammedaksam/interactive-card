@@ -23,7 +23,15 @@ export interface CardProps {
 }
 
 export interface InteractivePayCardProps {
+  // Controlled mode props
+  value?: CardFormData;
+  // eslint-disable-next-line no-unused-vars
+  onChange?: (data: CardFormData) => void;
+
+  // Uncontrolled mode props (backward compatibility)
   initialData?: Partial<CardFormData>;
+
+  // Common props
   backgroundImage?: string;
   randomBackgrounds?: boolean;
   // eslint-disable-next-line no-unused-vars
