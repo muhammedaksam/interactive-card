@@ -1,6 +1,6 @@
 {
   "name": "@muhammedaksam/interactive-card",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "A beautiful, interactive payment card component for React applications",
   "main": "dist/index.js",
