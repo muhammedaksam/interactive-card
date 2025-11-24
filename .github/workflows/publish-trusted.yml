@@ -51,8 +51,9 @@ jobs:
 
       - name: Verify build artifacts
         run: |
-          if [ ! -f "dist/index.js" ]; then
+          if [ ! -f "dist/index.js" ] || [ ! -f "dist/index.esm.js" ] || [ ! -f "dist/style.css" ]; then
             echo "ERROR: Build artifacts missing in dist/"
+            ls -la dist/ || echo "dist/ directory not found"
             exit 1
           fi
           echo "✓ Build artifacts verified"
