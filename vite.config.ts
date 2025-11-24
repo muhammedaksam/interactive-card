@@ -17,8 +17,12 @@ export default defineConfig(({ command, mode }) => {
         lib: {
           entry: resolve(__dirname, 'src/index.ts'),
           name: 'ReactInteractivePaycard',
-          formats: ['es', 'umd'],
-          fileName: format => `index.${format === 'es' ? 'esm' : format}.js`,
+          formats: ['es', 'cjs', 'umd'],
+          fileName: format => {
+            if (format === 'es') return 'index.esm.js';
+            if (format === 'cjs') return 'index.js';
+            return `index.${format}.js`;
+          },
         },
         rollupOptions: {
           external: ['react', 'react-dom'],
